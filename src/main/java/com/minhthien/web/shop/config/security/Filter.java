@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.config;
+package com.minhthien.web.shop.config.security;
 
 import com.minhthien.web.shop.entity.Auth.User;
 import com.minhthien.web.shop.service.security.TokenService;
@@ -52,6 +52,7 @@ public class Filter extends OncePerRequestFilter {
             "GET:/ws/**",
             "GET:/ws",
 
+            "POST:/api/payos/webhook",
             "GET:/payment-success.html",
             "GET:/payment-cancel.html"
     );
@@ -130,6 +131,11 @@ public class Filter extends OncePerRequestFilter {
         }
 
         String uri = request.getRequestURI();
+        if (uri.startsWith("/api/payos/webhook")) {
+            return true;
+        }
+
+
         String method = request.getMethod();
 
         System.out.println("URI = " + uri);

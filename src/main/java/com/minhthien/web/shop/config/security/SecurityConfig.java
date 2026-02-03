@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.config;
+package com.minhthien.web.shop.config.security;
 
 import com.minhthien.web.shop.service.auth.AuthService;
 import com.minhthien.web.shop.service.security.CustomUserDetailService;
@@ -70,6 +70,8 @@ public class SecurityConfig {
                                         "/payment-success.html", // Thêm dòng này để PayOS trả về không bị lỗi 403
                                         "/payment-cancel.html",  // Thêm dòng này
 
+                                        "/api/payos/webhook",
+
 
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
@@ -85,7 +87,13 @@ public class SecurityConfig {
                                         //upload
                                         "/api/v2/upload/uploadfile",
                                         "/api/v2/upload/files/{fileName:.+}",
-                                        "/api/v2/upload/loadall"
+                                        "/api/v2/upload/loadall",
+                                        //pay
+                                        "/api/payments/**",
+                                        "/api/cart/**",
+                                        "/api/refunds/request",
+                                        "/api/refunds/{id}/complete"
+
                                 ).authenticated()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "STAFF")

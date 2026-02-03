@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.config;
+package com.minhthien.web.shop.config.security;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
