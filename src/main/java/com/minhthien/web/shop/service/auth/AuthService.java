@@ -1,14 +1,14 @@
-package com.minhthien.web.shop.service.Auth;
+package com.minhthien.web.shop.service.auth;
 
 
-import com.minhthien.web.shop.dto.Auth.*;
-import com.minhthien.web.shop.dto.ResetPasswordRequest;
+import com.minhthien.web.shop.dto.auth.*;
+import com.minhthien.web.shop.dto.auth.ResetPasswordRequest;
 import com.minhthien.web.shop.entity.Auth.PasswordResetOtp;
-import com.minhthien.web.shop.entity.User;
+import com.minhthien.web.shop.entity.Auth.User;
 import com.minhthien.web.shop.enums.Role;
-import com.minhthien.web.shop.repository.Auth.PasswordResetOtpRepository;
-import com.minhthien.web.shop.repository.Auth.RefreshTokenRepository;
-import com.minhthien.web.shop.repository.UserRepository;
+import com.minhthien.web.shop.repository.auth.PasswordResetOtpRepository;
+import com.minhthien.web.shop.repository.auth.RefreshTokenRepository;
+import com.minhthien.web.shop.repository.auth.UserRepository;
 import com.minhthien.web.shop.service.security.TokenService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

@@ -1,8 +1,8 @@
 package com.minhthien.web.shop.service.security;
 
 
-import com.minhthien.web.shop.entity.User;
-import com.minhthien.web.shop.repository.UserRepository;
+import com.minhthien.web.shop.entity.Auth.User;
+import com.minhthien.web.shop.repository.auth.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.userdetails.UserDetails;

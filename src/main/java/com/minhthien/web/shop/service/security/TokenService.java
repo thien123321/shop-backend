@@ -1,16 +1,13 @@
 package com.minhthien.web.shop.service.security;
 
 
-import com.minhthien.web.shop.entity.User;
-import com.minhthien.web.shop.repository.UserRepository;
+import com.minhthien.web.shop.entity.Auth.User;
+import com.minhthien.web.shop.repository.auth.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;

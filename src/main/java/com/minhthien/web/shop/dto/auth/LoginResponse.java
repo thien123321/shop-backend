@@ -1,16 +1,17 @@
-package com.minhthien.web.shop.dto.Auth;
+package com.minhthien.web.shop.dto.auth;
 
-import com.minhthien.web.shop.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class RegisterResponse {
+@AllArgsConstructor
+@Builder
+
+public class LoginResponse {
+    private String token;
     private String name;
     private String email;
     private String phone;

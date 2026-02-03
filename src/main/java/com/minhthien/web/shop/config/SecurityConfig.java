@@ -1,6 +1,6 @@
 package com.minhthien.web.shop.config;
 
-import com.minhthien.web.shop.service.Auth.AuthService;
+import com.minhthien.web.shop.service.auth.AuthService;
 import com.minhthien.web.shop.service.security.CustomUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +67,6 @@ public class SecurityConfig {
                                         "/api/auth/reset-password",
                                         "/api/auth/logout",
 
-                                        //Product
-
-                                        //upload
-
-                                        //payment
-
                                         "/payment-success.html", // Thêm dòng này để PayOS trả về không bị lỗi 403
                                         "/payment-cancel.html",  // Thêm dòng này
 
@@ -83,7 +77,8 @@ public class SecurityConfig {
                                         "/ws/**"
                                 ).permitAll()
                                 .requestMatchers("/api/v2/payments/**",
-                                        "/api/v2/cart/**"
+                                        "/api/v2/cart/**",
+                                        "/api/categories/**"
                                 ).authenticated()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "STAFF")

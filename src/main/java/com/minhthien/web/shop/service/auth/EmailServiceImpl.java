@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.service.Auth;
+package com.minhthien.web.shop.service.auth;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

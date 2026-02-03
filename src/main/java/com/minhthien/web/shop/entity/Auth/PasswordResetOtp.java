@@ -1,6 +1,5 @@
 package com.minhthien.web.shop.entity.Auth;
 
-import com.minhthien.web.shop.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

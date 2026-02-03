@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.dto.Auth;
+package com.minhthien.web.shop.dto.auth;
 
 
 import lombok.AllArgsConstructor;

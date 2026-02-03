@@ -1,11 +1,10 @@
-package com.minhthien.web.shop.repository;
+package com.minhthien.web.shop.repository.auth;
 
-import com.minhthien.web.shop.entity.User;
+import com.minhthien.web.shop.entity.Auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

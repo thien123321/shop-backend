@@ -1,12 +1,11 @@
 package com.minhthien.web.shop.config;
 
-import com.minhthien.web.shop.entity.User;
+import com.minhthien.web.shop.entity.Auth.User;
 import com.minhthien.web.shop.service.security.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,13 +37,6 @@ public class Filter extends OncePerRequestFilter {
             "POST:/api/auth/reset-password",
             "POST:/api/auth/forgot-password",
             "POST:/api/auth/logout",
-            //Product
-
-
-            //upload
-
-            //paymen
-
 
             // Swagger FULL
             "GET:/swagger-ui/**",

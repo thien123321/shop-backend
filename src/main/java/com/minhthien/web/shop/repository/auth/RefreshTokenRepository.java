@@ -1,7 +1,7 @@
-package com.minhthien.web.shop.repository.Auth;
+package com.minhthien.web.shop.repository.auth;
 
 import com.minhthien.web.shop.entity.Auth.RefreshToken;
-import com.minhthien.web.shop.entity.User;
+import com.minhthien.web.shop.entity.Auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

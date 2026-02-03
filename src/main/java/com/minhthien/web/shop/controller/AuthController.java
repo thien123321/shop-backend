@@ -1,10 +1,9 @@
 package com.minhthien.web.shop.controller;
 
-import com.minhthien.web.shop.dto.Auth.*;
-import com.minhthien.web.shop.dto.ResetPasswordRequest;
-import com.minhthien.web.shop.entity.User;
-import com.minhthien.web.shop.enums.Role;
-import com.minhthien.web.shop.service.Auth.AuthService;
+import com.minhthien.web.shop.dto.auth.*;
+import com.minhthien.web.shop.dto.auth.ResetPasswordRequest;
+import com.minhthien.web.shop.entity.Auth.User;
+import com.minhthien.web.shop.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

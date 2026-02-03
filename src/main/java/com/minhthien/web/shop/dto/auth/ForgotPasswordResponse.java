@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.dto;
+package com.minhthien.web.shop.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResetPasswordRequest {
-    private String email;
-    private String otp;
-    private String newPassword;
+public class ForgotPasswordResponse {
+    private String accessToken;
 }

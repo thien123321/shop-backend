@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.entity;
+package com.minhthien.web.shop.entity.Auth;
 
 import com.minhthien.web.shop.enums.Role;
 import jakarta.persistence.*;
