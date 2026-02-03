@@ -76,9 +76,16 @@ public class SecurityConfig {
                                         "/v3/api-docs.yaml",
                                         "/ws/**"
                                 ).permitAll()
-                                .requestMatchers("/api/v2/payments/**",
-                                        "/api/v2/cart/**",
-                                        "/api/categories/**"
+                                .requestMatchers(
+                                        //product
+                                        "/api/product/findproduct",
+                                        "/api/product/insert",
+                                        "/api/product/update/{id}",
+                                        "/api/product/delete/{id}",
+                                        //upload
+                                        "/api/v2/upload/uploadfile",
+                                        "/api/v2/upload/files/{fileName:.+}",
+                                        "/api/v2/upload/loadall"
                                 ).authenticated()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "STAFF")

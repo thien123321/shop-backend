@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.controller;
+package com.minhthien.web.shop.controller.auth;
 
 import com.minhthien.web.shop.dto.auth.*;
 import com.minhthien.web.shop.dto.auth.ResetPasswordRequest;

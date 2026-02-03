@@ -1,6 +1,7 @@
 package com.minhthien.web.shop.entity.product;
 
 import com.minhthien.web.shop.entity.category.Category;
+import com.minhthien.web.shop.enums.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -34,6 +35,9 @@ public class Product {
     private String description;
 
     private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)

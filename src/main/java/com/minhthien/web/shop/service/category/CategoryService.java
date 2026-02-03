@@ -31,7 +31,6 @@ public class CategoryService {
 
         Category category = Category.builder()
                 .name(request.getName())
-                .description(request.getDescription())
                 .build();
 
         return toResponse(categoryRepository.save(category));
@@ -43,7 +42,6 @@ public class CategoryService {
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
         category.setName(request.getName());
-        category.setDescription(request.getDescription());
 
         return toResponse(categoryRepository.save(category));
     }
@@ -61,7 +59,6 @@ public class CategoryService {
         return CategoryResponseDTO.builder()
                 .id(category.getCategoryId())
                 .name(category.getName())
-                .description(category.getDescription())
                 .build();
     }
 }

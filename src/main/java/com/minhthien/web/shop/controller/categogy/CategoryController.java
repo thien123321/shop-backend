@@ -1,4 +1,4 @@
-package com.minhthien.web.shop.controller;
+package com.minhthien.web.shop.controller.categogy;
 
 import com.minhthien.web.shop.dto.category.CategoryRequestDTO;
 import com.minhthien.web.shop.dto.category.CategoryResponseDTO;
