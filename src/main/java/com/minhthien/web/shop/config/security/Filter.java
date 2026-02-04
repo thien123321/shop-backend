@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -92,11 +93,16 @@ public class Filter extends OncePerRequestFilter {
             // 3. Parse token
             User account = tokenService.extractAccount(token);
 
+            // 4. Build authority đúng chuẩn Spring Security
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
-                            account,
+                            account.getUsername(), // principal
                             null,
-                            account.getAuthorities()
+                            List.of(
+                                    new SimpleGrantedAuthority(
+                                            "ROLE_" + account.getRole().name()
+                                    )
+                            )
                     );
 
             auth.setDetails(

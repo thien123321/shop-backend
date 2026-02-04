@@ -49,6 +49,12 @@ public class User implements UserDetails {
     private String gender;
     private int age;
 
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Column(nullable = false)
+    private Boolean enabled =false;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
