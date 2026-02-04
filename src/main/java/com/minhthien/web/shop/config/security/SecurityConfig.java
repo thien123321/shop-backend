@@ -75,17 +75,18 @@ public class SecurityConfig {
                                         "/api/payos/webhook",
 
 
+
+
+
+
+
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/v3/api-docs.yaml",
                                         "/ws/**"
                                 ).permitAll()
                                 .requestMatchers(
-                                        //product
-                                        "/api/product/findproduct",
-                                        "/api/product/insert",
-                                        "/api/product/update/{id}",
-                                        "/api/product/delete/{id}",
+
                                         //upload
                                         "/api/v2/upload/uploadfile",
                                         "/api/v2/upload/files/{fileName:.+}",
@@ -97,11 +98,22 @@ public class SecurityConfig {
                                         "/api/refunds/{id}/complete"
 
                                 ).authenticated()
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/staff/**").hasAnyRole("ADMIN", "STAFF")
-                                .requestMatchers("/api/management/**").hasRole("MANAGEMENT")
-                                .requestMatchers("/api/user/**").hasRole("USER")
+                                .requestMatchers(
+                                        //product
+                                        "/api/product/findproduct",
+                                        "/api/product/insert",
+                                        "/api/product/update/{id}",
+                                        "/api/product/delete/{id}",
+
+                                        //cate
+                                        "/api/categories/**",
+                                        //quan ly user
+                                        "/api/admin/**"
+                                        ).hasAnyRole("ADMIN", "STAFF")
+                                .requestMatchers("/api/staff/**").hasRole("STAFF")
+                                .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN", "STAFF")
                                 .anyRequest().authenticated()
+
                 )
                 .userDetailsService(userDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

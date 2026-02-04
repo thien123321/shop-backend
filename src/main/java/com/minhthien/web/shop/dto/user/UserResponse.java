@@ -1,6 +1,7 @@
 package com.minhthien.web.shop.dto.user;
 
 
+import com.minhthien.web.shop.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +20,5 @@ public class UserResponse {
     private String address;
     private String avatar;
     private Boolean enabled;
+    private Role role;
 }

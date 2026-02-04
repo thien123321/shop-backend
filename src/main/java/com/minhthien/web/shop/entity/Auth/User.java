@@ -1,6 +1,7 @@
 package com.minhthien.web.shop.entity.Auth;
 
 import com.minhthien.web.shop.enums.Role;
+import com.minhthien.web.shop.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -54,6 +55,11 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private Boolean enabled =false;
+
+    private Boolean locked = false;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @Enumerated(EnumType.STRING)
     private Role role;

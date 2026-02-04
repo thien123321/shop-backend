@@ -51,6 +51,8 @@ public class AuthService {
                 .address(registerRequest.getAddress())
                 .phone(registerRequest.getPhone())
                 .role(Role.USER)
+                .enabled(true)
+                .locked(false)
                 .build();
 
         userRepository.save(user);

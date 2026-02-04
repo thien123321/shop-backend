@@ -14,7 +14,7 @@
     @RestController
     @RequiredArgsConstructor
     @RequestMapping("/api/user")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER','ADMIN','STAFF')")
 
     public class UserController {
 
