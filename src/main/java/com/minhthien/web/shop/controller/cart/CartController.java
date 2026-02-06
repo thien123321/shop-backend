@@ -24,10 +24,8 @@ public class CartController {
             @RequestParam Long productId,
             @RequestParam Integer quantity
     ) {
-        Product product = productService.getById(productId);
-
         return ResponseEntity.ok(
-                cartService.addItem(product, quantity)
+                cartService.addItem(productId, quantity)
         );
     }
 

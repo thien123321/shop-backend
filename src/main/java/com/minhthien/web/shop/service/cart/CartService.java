@@ -5,6 +5,7 @@ import com.minhthien.web.shop.entity.cart.CartItem;
 import com.minhthien.web.shop.entity.product.Product;
 import com.minhthien.web.shop.repository.cart.CartItemRepository;
 import com.minhthien.web.shop.repository.cart.CartRepository;
+import com.minhthien.web.shop.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
 
     // demo: tạm coi userId = 1
     private Long getCurrentUserId() {
@@ -33,16 +35,36 @@ public class CartService {
                 });
     }
 
-    public CartItem addItem(Product product, Integer quantity) {
+    public CartItem addItem(Long productId, Integer quantity) {
+
+        if (quantity <= 0) {
+            throw new RuntimeException("Quantity must be > 0");
+        }
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Cart cart = getOrCreateCart();
 
         CartItem item = cartItemRepository
-                .findByCartIdAndProductId(cart.getId(), product.getId())
+                .findByCartIdAndProductId(cart.getId(), productId)
                 .orElse(null);
 
+        int newQuantity = quantity;
+
         if (item != null) {
-            item.setQuantity(item.getQuantity() + quantity);
+            newQuantity = item.getQuantity() + quantity;
+        }
+
+        // ===== CHECK STOCK =====
+        if (newQuantity > product.getStock()) {
+            throw new RuntimeException(
+                    "Stock not enough. Available: " + product.getStock()
+            );
+        }
+
+        if (item != null) {
+            item.setQuantity(newQuantity);
             return cartItemRepository.save(item);
         }
 
@@ -61,13 +83,26 @@ public class CartService {
     }
 
     public CartItem updateQuantity(Long itemId, Integer quantity) {
+
+        if (quantity <= 0) {
+            throw new RuntimeException("Quantity must be > 0");
+        }
+
         CartItem item = cartItemRepository.findById(itemId)
                 .orElseThrow(() -> new RuntimeException("Cart item not found"));
+
+        Product product = item.getProduct();
+
+        // ===== CHECK STOCK =====
+        if (quantity > product.getStock()) {
+            throw new RuntimeException(
+                    "Stock not enough. Available: " + product.getStock()
+            );
+        }
 
         item.setQuantity(quantity);
         return cartItemRepository.save(item);
     }
-
     public void removeItem(Long itemId) {
         cartItemRepository.deleteById(itemId);
     }

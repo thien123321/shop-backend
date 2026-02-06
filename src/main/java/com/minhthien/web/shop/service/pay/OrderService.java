@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +43,10 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found"));
     }
 
-    public Order save(Order order) {
-        return orderRepository.save(order);
-    }
-
     public Optional<Order>  getByOrderCode(Long orderCode) {
         return orderRepository.findByOrderCode(orderCode);
     }
+    @Transactional
     public Order cancelOrder(Long orderId) {
 
         Order order = orderRepository.findById(orderId)
@@ -55,6 +54,18 @@ public class OrderService {
 
         if (order.getStatus() != OrderStatus.PENDING) {
             throw new RuntimeException("Cannot cancel paid order");
+        }
+
+        // Hoàn stock
+        for (OrderItem item : order.getOrderItems()) {
+
+            Product product = item.getProduct();
+
+            product.setStock(
+                    product.getStock() + item.getQuantity()
+            );
+
+            productService.save(product);
         }
 
         order.setStatus(OrderStatus.CANCELLED);
@@ -72,7 +83,8 @@ public class OrderService {
         Cart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
-        List<CartItem> cartItems = cartItemRepository.findByCartId(cart.getId());
+        List<CartItem> cartItems =
+                cartItemRepository.findByCartId(cart.getId());
 
         if (cartItems.isEmpty()) {
             throw new RuntimeException("Cart is empty");
@@ -84,14 +96,36 @@ public class OrderService {
         Order order = new Order();
         order.setUser(user);
         order.setOrderType(OrderType.CART);
+        order.setStatus(OrderStatus.PENDING);
+        order.setCreatedAt(LocalDateTime.now());
+        order.setOrderCode(System.currentTimeMillis());
+        order.setOrderItems(new ArrayList<>());
 
         BigDecimal totalAmount = BigDecimal.ZERO;
 
+        // ===== CHECK + TRỪ STOCK =====
         for (CartItem item : cartItems) {
+
             Product product = item.getProduct();
 
-            BigDecimal itemTotal = product.getPrice()
-                    .multiply(BigDecimal.valueOf(item.getQuantity()));
+            if (item.getQuantity() > product.getStock()) {
+                throw new RuntimeException(
+                        product.getName() + " out of stock"
+                );
+            }
+
+            // Trừ stock
+            product.setStock(
+                    product.getStock() - item.getQuantity()
+            );
+            productService.save(product);
+
+            BigDecimal itemTotal =
+                    product.getPrice()
+                            .multiply(
+                                    BigDecimal.valueOf(item.getQuantity())
+                            );
+
             totalAmount = totalAmount.add(itemTotal);
 
             OrderItem orderItem = new OrderItem();
@@ -107,24 +141,44 @@ public class OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
+        // clear cart
         cartItemRepository.deleteByCartId(cart.getId());
 
         return savedOrder;
     }
 
-
     @Transactional
-    public Order createBuyNowOrder(User user, Product product, int quantity) {
+    public Order createBuyNowOrder(
+            User user,
+            Product product,
+            int quantity
+    ) {
 
         if (quantity <= 0) {
             throw new RuntimeException("Quantity must be greater than 0");
         }
 
+        if (quantity > product.getStock()) {
+            throw new RuntimeException("Product out of stock");
+        }
+
+        // Trừ stock
+        product.setStock(product.getStock() - quantity);
+        productService.save(product);
+
         Order order = new Order();
         order.setUser(user);
         order.setStatus(OrderStatus.PENDING);
         order.setOrderType(OrderType.BUY_NOW);
-        order.setAmount(product.getPrice().multiply(BigDecimal.valueOf(quantity)));
+        order.setCreatedAt(LocalDateTime.now());
+        order.setOrderCode(System.currentTimeMillis());
+        order.setOrderItems(new ArrayList<>());
+
+        BigDecimal total =
+                product.getPrice()
+                        .multiply(BigDecimal.valueOf(quantity));
+
+        order.setAmount(total);
 
         OrderItem item = new OrderItem();
         item.setOrder(order);
@@ -136,6 +190,7 @@ public class OrderService {
 
         return orderRepository.save(order);
     }
+
 
 
 

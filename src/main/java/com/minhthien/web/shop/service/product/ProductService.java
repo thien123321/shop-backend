@@ -25,6 +25,11 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ImageStorageService imageStorageService;
 
+
+    public Product save(Product product) {
+        return productRepository.save(product);
+    }
+
     public Product getById(Long productId) {
         return productRepository.findById(productId)
                 .orElseThrow(() ->
