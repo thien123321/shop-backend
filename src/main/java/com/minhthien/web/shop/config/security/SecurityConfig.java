@@ -100,7 +100,6 @@ public class SecurityConfig {
                                 ).authenticated()
                                 .requestMatchers(
                                         //product
-                                        "/api/product/findproduct",
                                         "/api/product/insert",
                                         "/api/product/update/{id}",
                                         "/api/product/delete/{id}",
@@ -117,7 +116,10 @@ public class SecurityConfig {
                                         ).hasAnyRole("ADMIN", "STAFF")
                                 .requestMatchers("/api/staff/**",
                                         "/api/dashboard/staff/**").hasRole("STAFF")
-                                .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN", "STAFF")
+                                .requestMatchers("/api/user/**",
+                                        "/api/product-report",
+                                        "/api/product-review",
+                                        "/api/product/findproduct").hasAnyRole("USER","ADMIN", "STAFF")
                                 .anyRequest().authenticated()
 
                 )

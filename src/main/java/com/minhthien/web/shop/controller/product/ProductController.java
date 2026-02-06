@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 public class ProductController {
     private final ProductService productService;
 
+    @PreAuthorize("hasAnyRole('USER','ADMIN','STAFF')")
     @GetMapping("/findproduct")
     public ResponseEntity<Page<ProductFindResponse>> getProducts(
             @RequestParam(defaultValue = "0") int page,

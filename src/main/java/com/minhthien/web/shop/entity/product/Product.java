@@ -46,6 +46,13 @@ public class Product {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(columnDefinition = "DOUBLE DEFAULT 0")
+    private Double avgRating = 0.0;
+
+    @Column(columnDefinition = "INT DEFAULT 0")
+    private Integer totalReviews = 0;
+
+
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
