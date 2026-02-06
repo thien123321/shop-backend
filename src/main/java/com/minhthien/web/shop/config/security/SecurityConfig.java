@@ -111,7 +111,10 @@ public class SecurityConfig {
                                         //dashboard
                                         "/api/dashboard/admin/summary",
                                         //giam gia
-                                        "/api/product-discount/**"
+                                        "/api/product-discount/**",
+                                        //report
+
+                                        "/api/admin/product-reports/**"
 
                                         ).hasAnyRole("ADMIN", "STAFF")
                                 .requestMatchers("/api/staff/**",
