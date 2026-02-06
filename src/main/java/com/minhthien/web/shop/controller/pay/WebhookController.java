@@ -14,11 +14,9 @@ public class WebhookController {
 
     @PostMapping
     public ResponseEntity<String> webhook(
-            @RequestBody String rawBody,
-            @RequestHeader(value = "x-payos-signature", required = false)
-            String signature
+            @RequestBody String rawBody
     ) {
-        webhookService.handle(rawBody, signature);
+        webhookService.handle(rawBody);
         return ResponseEntity.ok("OK");
     }
 }
