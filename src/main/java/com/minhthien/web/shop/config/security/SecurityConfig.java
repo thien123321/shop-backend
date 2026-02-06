@@ -110,7 +110,9 @@ public class SecurityConfig {
                                         //quan ly user
                                         "/api/admin/**",
                                         //dashboard
-                                        "/api/dashboard/admin/summary"
+                                        "/api/dashboard/admin/summary",
+                                        //giam gia
+                                        "/api/product-discount/**"
 
                                         ).hasAnyRole("ADMIN", "STAFF")
                                 .requestMatchers("/api/staff/**",

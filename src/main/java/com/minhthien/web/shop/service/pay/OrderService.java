@@ -12,6 +12,7 @@ import com.minhthien.web.shop.repository.cart.CartItemRepository;
 import com.minhthien.web.shop.repository.cart.CartRepository;
 import com.minhthien.web.shop.repository.pay.OrderItemRepository;
 import com.minhthien.web.shop.repository.pay.OrderRepository;
+import com.minhthien.web.shop.service.product.ProductDiscountService;
 import com.minhthien.web.shop.service.product.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,8 @@ public class OrderService {
     private final CartItemRepository cartItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductService productService;
+    private final ProductDiscountService discountService;
+
 
     private Long getCurrentUserId() {
         return 1L;
@@ -120,19 +123,33 @@ public class OrderService {
             );
             productService.save(product);
 
+            // ===== DISCOUNT =====
+            BigDecimal discount =
+                    discountService.calculateDiscount(
+                            product.getId(),
+                            product.getPrice()
+                    );
+
+            BigDecimal finalPrice =
+                    product.getPrice().subtract(discount);
+
+// Tổng item
             BigDecimal itemTotal =
-                    product.getPrice()
-                            .multiply(
-                                    BigDecimal.valueOf(item.getQuantity())
-                            );
+                    finalPrice.multiply(
+                            BigDecimal.valueOf(item.getQuantity())
+                    );
 
             totalAmount = totalAmount.add(itemTotal);
 
+// Snapshot vào OrderItem
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setProduct(product);
             orderItem.setPrice(product.getPrice());
+            orderItem.setDiscountAmount(discount);
+            orderItem.setFinalPrice(finalPrice);
             orderItem.setQuantity(item.getQuantity());
+
 
             order.getOrderItems().add(orderItem);
         }
@@ -174,9 +191,18 @@ public class OrderService {
         order.setOrderCode(System.currentTimeMillis());
         order.setOrderItems(new ArrayList<>());
 
+        // ===== DISCOUNT =====
+        BigDecimal discount =
+                discountService.calculateDiscount(
+                        product.getId(),
+                        product.getPrice()
+                );
+
+        BigDecimal finalPrice =
+                product.getPrice().subtract(discount);
+
         BigDecimal total =
-                product.getPrice()
-                        .multiply(BigDecimal.valueOf(quantity));
+                finalPrice.multiply(BigDecimal.valueOf(quantity));
 
         order.setAmount(total);
 
@@ -185,6 +211,9 @@ public class OrderService {
         item.setProduct(product);
         item.setQuantity(quantity);
         item.setPrice(product.getPrice());
+        item.setDiscountAmount(discount);
+        item.setFinalPrice(finalPrice);
+
 
         order.getOrderItems().add(item);
 

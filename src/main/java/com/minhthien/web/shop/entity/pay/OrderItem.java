@@ -26,6 +26,12 @@ public class OrderItem {
 
     private BigDecimal price; // giá tại thời điểm mua
 
+
+    private BigDecimal discountAmount;
+
+
+    private BigDecimal finalPrice;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
