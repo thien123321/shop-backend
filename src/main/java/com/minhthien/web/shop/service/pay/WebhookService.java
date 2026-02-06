@@ -28,27 +28,26 @@ public class WebhookService {
     @Value("${payos.checksum-key}")
     private String checksumKey;
 
-
     @Transactional
     public void handle(String rawBody) {
 
         try {
 
-            // ===== Parse tree =====
+            // ===== Parse JSON =====
             JsonNode root =
                     objectMapper.readTree(rawBody);
 
             String signature =
                     root.get("signature").asText();
 
-// 🔥 Convert data → Map
+            // ===== Convert data → Map =====
             Map<String, Object> dataMap =
                     objectMapper.convertValue(
                             root.get("data"),
                             Map.class
                     );
 
-// 🔥 Verify đúng chuẩn PayOS
+            // ===== Verify signature =====
             boolean valid =
                     PayOSWebhookVerifier.verify(
                             dataMap,
@@ -60,9 +59,8 @@ public class WebhookService {
                 log.warn("❌ Invalid PayOS signature");
                 log.info("DATA MAP = {}", dataMap);
                 log.info("SIGN = {}", signature);
-                return;
+                return; // ❌ Không update order
             }
-
 
             // ===== Map DTO =====
             PayOSWebhookRequest request =
@@ -71,23 +69,31 @@ public class WebhookService {
                             PayOSWebhookRequest.class
                     );
 
-            // ===== BUSINESS =====
-
-            if (!"00".equals(request.getCode()))
-                return;
-
-            if (!Boolean.TRUE.equals(
-                    request.getSuccess()))
-                return;
+            Long orderCode =
+                    request.getData().getOrderCode();
 
             Order order =
                     orderRepository
-                            .findByOrderCode(
-                                    request.getData()
-                                            .getOrderCode()
-                            )
-                            .orElseThrow();
+                            .findByOrderCode(orderCode)
+                            .orElseThrow(() ->
+                                    new RuntimeException(
+                                            "Order not found: "
+                                                    + orderCode
+                                    )
+                            );
 
+            // ===== Idempotent check =====
+            if (order.getStatus()
+                    == OrderStatus.PAID) {
+
+                log.info(
+                        "⚠️ Order {} already PAID → skip",
+                        order.getId()
+                );
+                return;
+            }
+
+            // ===== Check amount =====
             BigDecimal webhookAmount =
                     BigDecimal.valueOf(
                             request.getData()
@@ -97,23 +103,56 @@ public class WebhookService {
             if (order.getAmount()
                     .compareTo(webhookAmount) != 0) {
 
-                log.error("❌ Amount mismatch");
+                log.error(
+                        "❌ Amount mismatch | order={} | db={} | webhook={}",
+                        order.getId(),
+                        order.getAmount(),
+                        webhookAmount
+                );
+
+                order.setStatus(OrderStatus.FAILED);
+                orderRepository.save(order);
                 return;
             }
 
-            order.setStatus(OrderStatus.PAID);
-            order.setPaidAt(LocalDateTime.now());
-            orderRepository.save(order);
+            // ===== SUCCESS =====
+            if ("00".equals(request.getCode())
+                    && Boolean.TRUE.equals(
+                    request.getSuccess())) {
 
-            log.info("✅ Order {} PAID",
-                    order.getId());
+                order.setStatus(OrderStatus.PAID);
+                order.setPaidAt(LocalDateTime.now());
+
+                orderRepository.save(order);
+
+                log.info(
+                        "✅ Order {} PAID",
+                        order.getId()
+                );
+            }
+
+            // ===== FAILED =====
+            else {
+
+                order.setStatus(OrderStatus.FAILED);
+
+                orderRepository.save(order);
+
+                log.warn(
+                        "❌ Order {} FAILED | code={} | desc={}",
+                        order.getId(),
+                        request.getCode(),
+                        request.getDesc()
+                );
+            }
 
         } catch (Exception e) {
+
+            log.error("❌ Webhook error", e);
+
             throw new RuntimeException(
-                    "Webhook error", e);
+                    "Webhook error", e
+            );
         }
     }
-
-
-
 }
