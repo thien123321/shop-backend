@@ -108,9 +108,13 @@ public class SecurityConfig {
                                         //cate
                                         "/api/categories/**",
                                         //quan ly user
-                                        "/api/admin/**"
+                                        "/api/admin/**",
+                                        //dashboard
+                                        "/api/dashboard/admin/summary"
+
                                         ).hasAnyRole("ADMIN", "STAFF")
-                                .requestMatchers("/api/staff/**").hasRole("STAFF")
+                                .requestMatchers("/api/staff/**",
+                                        "/api/dashboard/staff/**").hasRole("STAFF")
                                 .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN", "STAFF")
                                 .anyRequest().authenticated()
 
