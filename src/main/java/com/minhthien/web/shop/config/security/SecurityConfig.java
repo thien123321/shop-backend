@@ -126,7 +126,7 @@ public class SecurityConfig {
 
                                         ).hasAnyRole("ADMIN", "STAFF")
                                 .requestMatchers("/api/staff/**",
-                                        "/api/dashboard/staff/**").hasRole("STAFF")
+                                        "/api/dashboard/staff/**").hasAnyRole("USER","ADMIN", "STAFF")
                                 .requestMatchers("/api/user/**",
                                         "/api/product-report",
                                         "/api/product-review",

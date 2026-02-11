@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/staff")
-@PreAuthorize("hasRole('STAFF')")
+@PreAuthorize("hasAnyRole('USER','ADMIN','STAFF')")
 @RequiredArgsConstructor
 public class StaffController {
 
