@@ -78,28 +78,22 @@ public class Filter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         try {
-            // 1. PUBLIC API → bỏ qua hoàn toàn
-            if (shouldNotFilter(request)) {
+            // ❗ KHÔNG CHECK PUBLIC Ở ĐÂY
+            // Spring Security tự gọi shouldNotFilter()
+
+            String token = getToken(request);
+
+            // Không có token → cho đi tiếp (SecurityConfig quyết định)
+            if (token == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            // 2. API PRIVATE → bắt buộc token
-            String token = getToken(request);
-            if (token == null) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Missing Authorization token");
-                return;
-            }
-
-
-            // 3. Parse token
             User account = tokenService.extractAccount(token);
 
-            // 4. Build authority đúng chuẩn Spring Security
             UsernamePasswordAuthenticationToken auth =
                     new UsernamePasswordAuthenticationToken(
-                            account.getUsername(), // principal
+                            account.getUsername(),
                             null,
                             List.of(
                                     new SimpleGrantedAuthority(
@@ -117,11 +111,11 @@ public class Filter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
-            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write(e.getMessage());
+            response.getWriter().write("Invalid or expired token");
         }
     }
+
 
 
 
