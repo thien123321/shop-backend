@@ -87,9 +87,11 @@ public class Filter extends OncePerRequestFilter {
             // 2. API PRIVATE → bắt buộc token
             String token = getToken(request);
             if (token == null) {
-                filterChain.doFilter(request, response);
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Missing Authorization token");
                 return;
             }
+
 
             // 3. Parse token
             User account = tokenService.extractAccount(token);
