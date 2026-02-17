@@ -52,6 +52,7 @@ public class AuthController {
                         respon.getAddress(),
                         respon.getGender(),
                         respon.getAge(),
+                        respon.getRole(),
                         respon.getMessage()
                 )
 

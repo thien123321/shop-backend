@@ -94,6 +94,7 @@ public class AuthService {
                 .gender(user.getGender())
                 .address(user.getAddress())
                 .phone(user.getPhone())
+                .role(user.getRole())
                 .message("Login Success")
                 .build();
 
