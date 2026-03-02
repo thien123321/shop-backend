@@ -33,35 +33,39 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // ===== ORDERS TODAY =====
     @Query("""
-        SELECT COUNT(o)
-        FROM Order o
-        WHERE DATE(o.createdAt) = CURRENT_DATE
-    """)
-    Long countOrdersToday();
+    SELECT COUNT(o)
+    FROM Order o
+    WHERE o.createdAt >= :start
+      AND o.createdAt < :end
+""")
+    Long countOrdersToday(LocalDateTime start,
+                          LocalDateTime end);
 
     // ===== REVENUE TODAY =====
     @Query("""
-        SELECT COALESCE(SUM(o.amount),0)
-        FROM Order o
-        WHERE o.status = 'PAID'
-          AND DATE(o.paidAt) = CURRENT_DATE
-    """)
-    BigDecimal revenueToday();
+    SELECT COALESCE(SUM(o.amount),0)
+    FROM Order o
+    WHERE o.status = 'PAID'
+      AND o.paidAt >= :start
+      AND o.paidAt < :end
+""")
+    BigDecimal revenueToday(LocalDateTime start,
+                            LocalDateTime end);
 
     // ===== CHART BY HOUR =====
     @Query("""
-        SELECT HOUR(o.paidAt), SUM(o.amount)
-        FROM Order o
-        WHERE o.status = 'PAID'
-          AND o.paidAt >= :start
-        GROUP BY HOUR(o.paidAt)
-        ORDER BY HOUR(o.paidAt)
-    """)
+    SELECT function('hour', o.paidAt), SUM(o.amount)
+    FROM Order o
+    WHERE o.status = 'PAID'
+      AND o.paidAt >= :start
+    GROUP BY function('hour', o.paidAt)
+    ORDER BY function('hour', o.paidAt)
+""")
     List<Object[]> revenueByHour(LocalDateTime start);
 
     // ===== CHART BY DAY =====
     @Query("""
-        SELECT DATE(o.paidAt), SUM(o.amount)
+        SELECT function('date', o.paidAt), SUM(o.amount)
         FROM Order o
         WHERE o.status = 'PAID'
           AND o.paidAt >= :start
@@ -72,7 +76,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // ===== CHART BY MONTH =====
     @Query("""
-        SELECT YEAR(o.paidAt), MONTH(o.paidAt), SUM(o.amount)
+        SELECT function('year', o.paidAt),
+               function('month', o.paidAt), SUM(o.amount)
         FROM Order o
         WHERE o.status = 'PAID'
           AND o.paidAt >= :start

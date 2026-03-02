@@ -11,6 +11,8 @@ import com.minhthien.web.shop.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,13 +36,17 @@ public class DashboardService {
 
     // ===== STAFF =====
     public StaffDashboardSummaryDTO getStaffSummary() {
+
+        // 🔥 FIX TODAY RANGE
+        LocalDate today = LocalDate.now();
+        LocalDateTime start = today.atStartOfDay();
+        LocalDateTime end = today.plusDays(1).atStartOfDay();
+
         return StaffDashboardSummaryDTO.builder()
                 .totalOrders(orderRepo.countTotalOrders())
-                .ordersToday(orderRepo.countOrdersToday())
-                .revenueToday(orderRepo.revenueToday())
-                .lowStockProducts(
-                        (long) productRepo.lowStockProducts().size()
-                )
+                .ordersToday(orderRepo.countOrdersToday(start, end))
+                .revenueToday(orderRepo.revenueToday(start, end))
+                .lowStockProducts((long) productRepo.lowStockProducts().size())
                 .build();
     }
 
@@ -76,7 +82,7 @@ public class DashboardService {
         return data.stream()
                 .map(o -> RevenueChartDTO.builder()
                         .label(o[0] + "h")
-                        .revenue((java.math.BigDecimal) o[1])
+                        .revenue((BigDecimal) o[1])
                         .build())
                 .toList();
     }
@@ -85,7 +91,7 @@ public class DashboardService {
         return data.stream()
                 .map(o -> RevenueChartDTO.builder()
                         .label(o[0].toString())
-                        .revenue((java.math.BigDecimal) o[1])
+                        .revenue((BigDecimal) o[1])
                         .build())
                 .toList();
     }
@@ -94,7 +100,7 @@ public class DashboardService {
         return data.stream()
                 .map(o -> RevenueChartDTO.builder()
                         .label(o[1] + "/" + o[0])
-                        .revenue((java.math.BigDecimal) o[2])
+                        .revenue((BigDecimal) o[2])
                         .build())
                 .toList();
     }
