@@ -4,6 +4,8 @@ import com.minhthien.web.shop.dto.upload.ResponseObject;
 import com.minhthien.web.shop.service.upload.ISttorageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,16 +45,19 @@ public class FileUploadController {
     }
     // get img url
     @GetMapping("/files/{fileName:.+}")
-    public ResponseEntity<byte[]> readDetailFile(@PathVariable String fileName) {
-        try{
-            byte[] bytes = iSttorageService.readFile(fileName);
-            return ResponseEntity
-                    .ok()
-                    .contentType(MediaType.IMAGE_JPEG)
-                    .body(bytes);
+    public ResponseEntity<Resource> readDetailFile(@PathVariable String fileName) {
+        try {
+            Path file = Paths.get("upload").resolve(fileName);
+            Resource resource = new UrlResource(file.toUri());
+
+            String contentType = Files.probeContentType(file);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
 
         } catch (Exception e) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.notFound().build();
         }
     }
 

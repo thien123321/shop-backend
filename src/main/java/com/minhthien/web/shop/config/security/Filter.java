@@ -39,6 +39,11 @@ public class Filter extends OncePerRequestFilter {
             "POST:/api/auth/forgot-password",
             "POST:/api/auth/logout",
 
+            //upload
+            "POST:/api/upload/uploadfile",
+            "GET:/api/upload/files/{fileName:.+}",
+            "GET:/api/upload/loadall",
+
 
             // Swagger FULL
             "GET:/swagger-ui/**",

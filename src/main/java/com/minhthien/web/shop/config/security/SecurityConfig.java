@@ -90,15 +90,11 @@ public class SecurityConfig {
                                         "/swagger-ui/**",
                                         "/v3/api-docs/**",
                                         "/v3/api-docs.yaml",
+                                        "/api/upload/files/**",
                                         "/ws/**"
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(
-
-                                        //upload
-                                        "/api/v2/upload/uploadfile",
-                                        "/api/v2/upload/files/{fileName:.+}",
-                                        "/api/v2/upload/loadall",
                                         //pay
                                         "/api/payments/**",
                                         "/api/cart/**",
