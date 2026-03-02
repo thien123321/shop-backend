@@ -30,6 +30,7 @@ public class AuthController {
                         user.getAddress(),
                         user.getGender(),
                         user.getAge(),
+                        user.getRole(),
                         user.getMessage()
                 )
         );

@@ -50,7 +50,7 @@ public class AuthService {
                 .gender(registerRequest.getGender())
                 .address(registerRequest.getAddress())
                 .phone(registerRequest.getPhone())
-                .role(Role.USER)
+                .role(registerRequest.getRole())
                 .enabled(true)
                 .locked(false)
                 .build();
@@ -64,7 +64,7 @@ public class AuthService {
                 .gender(user.getGender())
                 .address(user.getAddress())
                 .phone(user.getPhone())
-
+                .role(user.getRole())
                 .message("Registered Successfully")
                 .build();
 

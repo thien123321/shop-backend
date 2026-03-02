@@ -1,5 +1,6 @@
 package com.minhthien.web.shop.dto.auth;
 
+import com.minhthien.web.shop.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +19,6 @@ public class RegisterRequest {
     private String phone;
     private String address;
     private String gender;
+    private Role role;
     private int age;
 }
