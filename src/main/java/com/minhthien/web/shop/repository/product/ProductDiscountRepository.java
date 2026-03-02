@@ -3,6 +3,7 @@ package com.minhthien.web.shop.repository.product;
 import com.minhthien.web.shop.entity.product.ProductDiscount;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +22,7 @@ public interface ProductDiscountRepository extends JpaRepository<ProductDiscount
     )
 """)
     List<ProductDiscount> findAllActive(
-            Long productId,
-            LocalDateTime now
+            @Param("productId") Long productId,
+            @Param("now") LocalDateTime now
     );
 }
