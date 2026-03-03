@@ -77,6 +77,7 @@ public class ProductService {
             BigDecimal price,
             Long categoryId,
             MultipartFile image,
+            ProductStatus status,
             Integer stock
     ) {
         if (productRepository.existsByName(name)) {
@@ -96,6 +97,7 @@ public class ProductService {
                 .price(price)
                 .imageUrl(imageUrl)
                 .category(category)
+                .status(status)
                 .stock(stock)
                 .build();
 
@@ -108,6 +110,7 @@ public class ProductService {
                 .productPrice(saved.getPrice())
                 .categoryId(categoryId)
                 .imageUrl(saved.getImageUrl())
+                .status(saved.getStatus())
                 .stock(saved.getStock())
                 .build();
     }
@@ -118,6 +121,7 @@ public class ProductService {
             String description,
             BigDecimal price,
             MultipartFile image,
+            ProductStatus status,
             Integer stock
     ) {
         if (productRepository.existsByNameAndIdNot(name,id)) {
@@ -130,6 +134,7 @@ public class ProductService {
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);
+        product.setStatus(status);
         product.setStock(stock);
 
         // Nếu có ảnh mới thì xoá ảnh cũ
@@ -154,6 +159,7 @@ public class ProductService {
                 .productDescription(saved.getDescription())
                 .productPrice(saved.getPrice())
                 .imageUrl(saved.getImageUrl())
+                .status(saved.getStatus())
                 .stock(saved.getStock())
                 .build();
     }

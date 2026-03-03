@@ -2,6 +2,7 @@ package com.minhthien.web.shop.controller.product;
 
 import com.minhthien.web.shop.dto.product.ProductFindResponse;
 import com.minhthien.web.shop.dto.product.ProductInsertResponse;
+import com.minhthien.web.shop.enums.ProductStatus;
 import com.minhthien.web.shop.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,10 +42,11 @@ public class ProductController {
             @RequestParam BigDecimal price,
             @RequestParam Long categoryId,
             @RequestParam MultipartFile image,
+            @RequestParam ProductStatus status,
             @RequestParam Integer stock
     ) {
         return ResponseEntity.ok(
-                productService.insertProduct(name,description,price,categoryId,image,stock)
+                productService.insertProduct(name,description,price,categoryId,image,status,stock)
         );
     }
 
@@ -56,10 +58,11 @@ public class ProductController {
             @RequestParam String description,
             @RequestParam BigDecimal price,
             @RequestParam Integer stock,
+            @RequestParam ProductStatus status,
             @RequestParam(required = false) MultipartFile image
     ) {
         return ResponseEntity.ok(
-                productService.updateProduct(id, name, description, price,image,stock)
+                productService.updateProduct(id, name, description, price,image,status,stock)
         );
     }
 

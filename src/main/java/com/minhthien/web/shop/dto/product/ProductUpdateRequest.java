@@ -1,5 +1,6 @@
 package com.minhthien.web.shop.dto.product;
 
+import com.minhthien.web.shop.enums.ProductStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,6 @@ public class ProductUpdateRequest {
     private String productDescription;
     private BigDecimal productPrice;
     private Integer stock;
-
+    private ProductStatus status;
     private String imageUrl;
 }
