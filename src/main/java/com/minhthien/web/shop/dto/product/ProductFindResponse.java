@@ -19,6 +19,7 @@ public class ProductFindResponse {
     private String productName;
     private BigDecimal price;
     private String description;
+    private int stock;
     private String imageUrl;
     private ProductStatus status;
 }
