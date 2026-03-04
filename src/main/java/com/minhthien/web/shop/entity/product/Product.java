@@ -1,5 +1,6 @@
 package com.minhthien.web.shop.entity.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.minhthien.web.shop.entity.category.Category;
 import com.minhthien.web.shop.enums.ProductStatus;
 import jakarta.persistence.*;
@@ -41,6 +42,7 @@ public class Product {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonIgnore
     private Category category;
 
     @Column(nullable = false, updatable = false)

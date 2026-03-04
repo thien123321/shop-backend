@@ -1,6 +1,7 @@
 package com.minhthien.web.shop.entity.category;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.minhthien.web.shop.entity.product.Product;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -30,12 +31,15 @@ public class Category {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
+    @JsonIgnore
     private Category parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Category> children;
 
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Product> products;
 
     @Column(nullable = false, updatable = false)
