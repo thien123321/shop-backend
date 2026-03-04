@@ -2,13 +2,12 @@ package com.minhthien.web.shop.service.product;
 
 
 import com.minhthien.web.shop.dto.product.ProductFindResponse;
-import com.minhthien.web.shop.dto.product.ProductInsertRequest;
 import com.minhthien.web.shop.dto.product.ProductInsertResponse;
 import com.minhthien.web.shop.entity.category.Category;
 import com.minhthien.web.shop.entity.product.Product;
 import com.minhthien.web.shop.enums.ProductStatus;
 import com.minhthien.web.shop.repository.product.ProductRepository;
-import com.minhthien.web.shop.service.upload.ImageStorageService;
+import com.minhthien.web.shop.service.upload.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +22,7 @@ import java.math.BigDecimal;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ImageStorageService imageStorageService;
+    private final ImageService imageService;
 
 
     public Product save(Product product) {
@@ -84,8 +83,7 @@ public class ProductService {
             throw new RuntimeException("Product name already exists");
         }
 
-        String fileName = imageStorageService.storeFile(image);
-        String imageUrl = "http://localhost:8080/upload/" + fileName;
+        String imageUrl = imageService.upload(image);
 
         Category category = Category.builder()
                 .categoryId(categoryId)
@@ -141,14 +139,11 @@ public class ProductService {
         if (image != null && !image.isEmpty()) {
 
             if (product.getImageUrl() != null) {
-                String oldFile = product.getImageUrl()
-                        .substring(product.getImageUrl().lastIndexOf("/") + 1);
-                imageStorageService.deleteFile(oldFile);
+                imageService.delete(product.getImageUrl());
             }
 
-            String newFileName = imageStorageService.storeFile(image);
-            String newUrl = "http://localhost:8080/upload/" + newFileName;
-            product.setImageUrl(newUrl);
+            String newImageUrl = imageService.upload(image);
+            product.setImageUrl(newImageUrl);
         }
 
         Product saved = productRepository.save(product);
@@ -170,9 +165,7 @@ public class ProductService {
         Product products = productRepository.findById(id).orElseThrow(() -> new RuntimeException("Product not found"));
 
         if (products.getImageUrl() != null && !products.getImageUrl().isEmpty()) {
-            String fileName = products.getImageUrl()
-                    .substring(products.getImageUrl().lastIndexOf("/") + 1);
-            imageStorageService.deleteFile(fileName);
+            imageService.delete(products.getImageUrl());
         }
 
         // xoá product khỏi DB

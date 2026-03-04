@@ -5,7 +5,7 @@ import com.minhthien.web.shop.dto.user.UpdateProfileRequest;
 import com.minhthien.web.shop.dto.user.UserResponse;
 import com.minhthien.web.shop.entity.Auth.User;
 import com.minhthien.web.shop.repository.auth.UserRepository;
-import com.minhthien.web.shop.service.upload.ImageStorageService;
+import com.minhthien.web.shop.service.upload.ImageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,7 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ImageStorageService imageStorageService;
+    private final ImageService imageService;
 
 
     // ===== COMMON =====
@@ -87,19 +87,20 @@ public class UserService {
 
     // ===== UPDATE AVATAR =====
     public UserResponse updateAvatar(MultipartFile file) {
+
         User user = getCurrentUser();
 
-        // (optional) xoá avatar cũ
-        if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
-            String oldFile = user.getAvatar().replace("/upload/", "");
-            imageStorageService.deleteFile(oldFile);
+        if (file == null || file.isEmpty()) {
+            throw new RuntimeException("File is empty");
         }
 
-        // upload ảnh mới
-        String storedFileName = imageStorageService.storeFile(file);
+        // Nếu có avatar cũ → xoá trên Cloudinary
+        if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {
+            imageService.delete(user.getAvatar());
+        }
 
-        // build url public
-        String avatarUrl = "/upload/" + storedFileName;
+        // Upload ảnh mới lên Cloudinary
+        String avatarUrl = imageService.upload(file);
 
         user.setAvatar(avatarUrl);
         userRepository.save(user);
